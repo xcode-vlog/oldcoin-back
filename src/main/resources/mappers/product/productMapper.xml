@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.oldcoinback.repository.product.mybatis.ProductMapper">
+
+    <insert id="insertProduct">
+        INSERT INTO PRODUCT_INFO
+        (
+            PRODUCT_TITLE,
+            START_PRICE,
+            END_PRICE,
+            IMAGE_URL
+        )
+        VALUES
+        (
+            #{productTitle},
+            #{startPrice},
+            #{endPrice},
+            #{imageUrl}
+        )
+    </insert>
+
+    <update id="updateProduct">
+        UPDATE PRODUCT_INFO
+           SET PRODUCT_TITLE = #{productTitle}
+             , START_PRICE = #{startPrice}
+             , END_PRICE = #{endPrice}
+             , IMAGE_URL = #{imageUrl}
+         WHERE PRODUCT_ID = #{productId}
+    </update>
+
+    <select id="findByProductId" resultType="GetProductInfoResponse">
+        SELECT PRODUCT_ID
+             , PRODUCT_TITLE
+             , START_PRICE
+             , END_PRICE
+             , IMAGE_URL
+          FROM PRODUCT_INFO
+         WHERE PRODUCT_ID = #{productId}
+    </select>
+
+    <select id="findAllProduct" resultType="GetProductInfoResponse">
+        SELECT PRODUCT_ID
+             , PRODUCT_TITLE
+             , START_PRICE
+             , END_PRICE
+             , IMAGE_URL
+        FROM PRODUCT_INFO
+
+    </select>
+</mapper>

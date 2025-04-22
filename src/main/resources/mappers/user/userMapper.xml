@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.oldcoinback.repository.user.mybatis.UserMapper">
+    <select id="sample">
+        select 'ok' from dual
+    </select>
+
+    <select id="findByUsername" resultType="CustomUserDetail">
+        SELECT USER_SEQ
+             , USER_ID
+             , PASSWORD
+             , NAME
+             , NICK_NAME
+             , EMAIL
+             , HP_NUMBER
+             , USER_ROLE
+          FROM USER
+         WHERE USER_ID = #{username}
+    </select>
+
+    <insert id="insertUser">
+        INSERT INTO USER
+        (
+            USER_ID,
+            PASSWORD,
+            NAME,
+            NICK_NAME,
+            EMAIL,
+            BIRTH,
+            HP_NUMBER,
+            USER_ROLE,
+            CONFIRM
+        )
+        VALUES
+        (
+            #{userId},
+            #{password},
+            #{name},
+            #{nickName},
+            #{email},
+            #{birth},
+            #{hpNumber},
+            concat('ROLE_', UPPER(#{userRole})),
+            #{confirm}
+        )
+    </insert>
+
+    <update id="updateUserConfirm" >
+        UPDATE USER
+           SET CONFIRM = #{confirm}
+         WHERE USER_ID = #{userId}
+    </update>
+
+    <select id="selectUserList" resultType="ResolvedUser">
+        SELECT USER_SEQ
+             , USER_ID
+             , PASSWORD
+             , NAME
+             , NICK_NAME
+             , EMAIL
+             , HP_NUMBER
+             , USER_ROLE
+             , CONFIRM
+          FROM USER
+         WHERE USER_ROLE = 'ROLE_USER'
+    </select>
+</mapper>

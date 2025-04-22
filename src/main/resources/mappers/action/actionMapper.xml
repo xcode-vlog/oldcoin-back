@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.oldcoinback.repository.auction.mybatis.AuctionMapper">
+
+    <insert id="insertAuction" >
+        INSERT INTO auction_room
+        (
+            auction_key,
+            product_id,
+            auction_status
+        )
+        VALUES
+        (
+            #{auctionKey},
+            #{productId},
+            #{status}
+        )
+    </insert>
+
+    <update id="updateAuction">
+        UPDATE auction_room
+           SET auction_key = #{auctionKey}
+          FROM auction_id = #{auctionId}
+    </update>
+
+    <select id="findByAuctionId">
+        SELECT auction_id
+             , auction_key
+             , product_id
+             , auction_status
+             , is_start
+             , start_time
+             , end_time
+          FROM auction_room
+         WHERE auction_id = #{auctionId}
+    </select>
+    <select id="findByAuctionKey">
+        SELECT auction_id
+             , auction_key
+             , product_id
+             , auction_status
+             , is_start
+             , start_time
+             , end_time
+        FROM auction_room
+        WHERE auction_key = #{auctionKey}
+    </select>
+
+    <select id="findByAuctionStatus">
+        SELECT auction_id
+             , auction_key
+             , product_id
+             , auction_status
+             , is_start
+             , start_time
+             , end_time
+          FROM auction_room
+         WHERE auction_status = #{status}
+    </select>
+
+    <update id="updateAuctionStatus">
+        UPDATE auction_room
+           SET auction_status = #{status}
+         WHERE auction_id = #{auctionId}
+    </update>
+    <update id="updateAuctionBidOpen">
+        UPDATE auction_room
+           SET is_start = 'Y'
+             , start_time = now()
+         WHERE auction_key = #{auctionKey}
+    </update>
+
+    <update id="updateAuctionBidClose">
+        UPDATE auction_room
+           SET is_start = 'N'
+             , end_time = now()
+         WHERE auction_key = #{auctionKey}
+    </update>
+
+    <select id="findBidHistoryByAuctionKey" resultType="kr.co.oldcoinback.domain.AuctionMessage">
+        SELECT sender_id,
+               (SELECT nvl(nick_name, name) FROM user u WHERE u.user_id = m.sender_id) AS sender_name,
+               auction_key,
+               auction_message_type,
+               auction_price,
+               award,
+               message_id
+          FROM auction_message m
+         WHERE auction_key = #{auctionKey}
+           AND priority = 0
+    </select>
+
+
+</mapper>

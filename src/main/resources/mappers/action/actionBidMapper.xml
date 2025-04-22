@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.oldcoinback.repository.auction.mybatis.AuctionBidMapper">
+
+    <select id="selectMaxBid" resultType="Long">
+        SELECT MAX(auction_price) as max_auction_price
+          FROM auction_message
+         WHERE auction_key = #{auctionKey}
+    </select>
+    <select id="selectBidPriority" resultType="Integer">
+        SELECT COUNT(message_id) as auction_priority
+          FROM auction_message
+         WHERE auction_key = #{auctionKey}
+           AND auction_price = #{auctionPrice}
+    </select>
+
+    <insert id="insertBidMessage"  useGeneratedKeys="true" keyProperty="messageId">
+        INSERT INTO auction_message
+        (
+            auction_key,
+            auction_price,
+            sender_id,
+            auction_message_type,
+            priority,
+            award
+        )
+        VALUES
+        (
+            #{auctionKey},
+            #{auctionPrice},
+            #{senderId},
+            #{auctionMessageType},
+            #{priority},
+            #{award}
+        )
+    </insert>
+
+    <insert id="enterAuction">
+        INSERT INTO auction_member
+        (
+            auction_key,
+            user_id
+        )
+        VALUES
+        (
+            #{auctionKey},
+            #{userId}
+        )
+    </insert>
+    <delete id="leaveAuction">
+        DELETE FROM auction_member
+         WHERE auction_key = #{auctionKey}
+           AND user_id = #{userId}
+    </delete>
+    <select id="selectAuctionMember" resultType="GetAuctionMember">
+        SELECT auction_key,
+               user_id,
+               (SELECT nick_name FROM user u WHERE u.user_id = a.user_id) as nick_name
+          FROM auction_member a
+         WHERE auction_key = #{auctionKey}
+    </select>
+
+    <update id="updateAwardAuctionMember">
+        UPDATE auction_message
+           SET award = 'Y'
+         WHERE message_id = #{messageId}
+    </update>
+</mapper>
