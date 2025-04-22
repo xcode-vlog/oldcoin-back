@@ -41,6 +41,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
+        http.formLogin(AbstractHttpConfigurer::disable);
         http.cors(c -> c.configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(auth ->
             auth
@@ -60,7 +61,8 @@ public class SecurityConfig {
             CorsConfiguration configuration = new CorsConfiguration();
             configuration.setAllowedMethods(Collections.singletonList("*"));
             configuration.setAllowedHeaders(Collections.singletonList("*"));
-            configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+            configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://auc.planict.co.kr"));
+
             configuration.setAllowCredentials(true);
             return configuration;
         };

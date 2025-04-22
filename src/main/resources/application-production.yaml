@@ -1,0 +1,47 @@
+server:
+  port: 8080
+
+
+spring:
+  application:
+    name: oldcoin
+  datasource:
+    hikari:
+      driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+      jdbc-url: jdbc:log4jdbc:mariadb://121.170.188.106:33326/oldcoin
+      username: lime123
+      password: lime123!
+      connection-timeout: 5000
+      idle-timeout: 36000
+      maximum-pool-size: 5
+
+mybatis:
+  mapper-locations: classpath:mappers/**/*.xml
+  type-aliases-package: kr.co.oldcoinback.doamin.**.request,kr.co.oldcoinback.domain.**.response
+
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: null
+
+jwt:
+  secret: 02ad30c1f311b5f26c899026b53b46346c81ac13f8ca901643c3ac0f67936689655d24832265424674185569f20f4342
+  access-expired-seconds: 7200 # two hour
+  refresh-expired-seconds: 604800 # a week
+lime:
+  allow-uris:
+    allow-uris:
+      - "/error"
+      - "/api/user/login"
+      - "/api/user/signup"
+      - "/api/user/logout"
+
+logging:
+  level:
+    root: info
+    jdbc:
+      connection: off
+      audit: off
+      sqlonly: off
+      sqltiming: info
+      resultset: off
+      resultsettable: off
